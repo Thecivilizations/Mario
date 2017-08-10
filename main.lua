@@ -6,24 +6,22 @@ io.stdout:setvbuf("no") --控制台输出窗口,优先输出如果没有则在�
 	
 --]]
 
-function analysis(...)
-	local tab = {...}
-	local result = {}
-	for q,m in pairs(tab) do
-		for k,v in pairs(m) do
-			if #result>0 and v~= 0 then
-				local insertAllow = true
-				for i,j in pairs(result) do
-					if v==j then
-						insertAllow = false
-					end
+function analysis(m,r)
+	local tab = m
+	local result = r or {}
+	for k,v in pairs(tab) do
+		if #result>0 and v~= 0 then
+			local insertAllow = true
+			for i,j in pairs(result) do
+				if v==j then
+					insertAllow = false
 				end
-				if insertAllow then
-					table.insert(result,v)
-				end
-			else
+			end
+			if insertAllow then
 				table.insert(result,v)
 			end
+		elseif v~= 0 then
+			table.insert(result,v)
 		end
 	end
 	return result
@@ -31,8 +29,11 @@ end
 
 
 local Map = {}
-Map.width,Map.height,Map.background,Map.Tiles,Map.hiddenTiles = require("Maps/Map")
-local include = analysis(Map.background,Map.Tiles,Map.hiddenTiles)
+local content = love.filesystem.read("Maps/Map.lua")
+Map.width,Map.height,Map.background,Map.tiles,Map.hiddenTiles = loadstring(content)()
+local include = analysis(Map.background)
+include = analysis(Map.tiles,include)
+include = analysis(Map.hiddenTiles,include)
 print(#include)
 
 
