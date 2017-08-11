@@ -1,6 +1,6 @@
 
 io.stdout:setvbuf("no") --控制台输出窗口,优先输出如果没有则在程序结束后再输出的
-
+	
 --[[ 
 	项目主体部分
 	
@@ -34,17 +34,19 @@ Map.width,Map.height,Map.background,Map.tiles,Map.hiddenTiles = loadstring(conte
 local include = analysis(Map.background)
 include = analysis(Map.tiles,include)
 include = analysis(Map.hiddenTiles,include)
-print(#include)
-
-
 
 function love.load() --资源加载回调函数，仅初始化时调用一次
-
+	tiles = {}
+	love.graphics.setDefaultFilter("nearest", "nearest")
+	for k,v in pairs(include) do
+		tiles[v] = love.graphics.newImage("Asserts/Tiles/tile-"..v..".png")
+	end
 end
 
 
 
 function love.update(dt) --更新回调函数，每周期调用
+	
 
 
 
@@ -55,14 +57,20 @@ end
 
 
 function love.draw() --绘图回调函数，每周期调用
-
+	love.graphics.clear(14,199,255)
+	for x=1,Map.width do
+		for y=1,Map.height do
+			if Map.tiles[x+(y-1)*Map.width]~= 0 then
+				love.graphics.draw(tiles[Map.tiles[x+(y-1)*Map.width]],(x-1)*32,(y-1)*32,0,2)
+			end
+		end
+	end
 
 
     
 
 
 end
-
 
 
 function love.keypressed(key) --键盘检测回调函数，当键盘事件触发是调用
