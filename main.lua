@@ -7,6 +7,7 @@ io.stdout:setvbuf("no") --控制台输出窗口,优先输出如果没有则在�
 --]]
 
 class = require "middleclass"
+require "unknown"
 
 function analysis(m,r)
 	local tab = m
@@ -33,6 +34,7 @@ end
 local Map = {}
 local content = love.filesystem.read("Maps/Map.lua")
 Map.width,Map.height,Map.background,Map.tiles,Map.hiddenTiles = loadstring(content)()
+Map.specialBlocks = {}
 local include = analysis(Map.background)
 include = analysis(Map.tiles,include)
 include = analysis(Map.hiddenTiles,include)
@@ -63,6 +65,9 @@ function love.draw() --绘图回调函数，每周期调用
 	for x=1,Map.width do
 		for y=1,Map.height do
 			if Map.tiles[x+(y-1)*Map.width]~= 0 then
+				love.graphics.setColor(0, 0, 0, 100)
+				love.graphics.draw(tiles[Map.tiles[x+(y-1)*Map.width]],(x-1)*32+10,(y-1)*32+10,0,2)
+				love.graphics.setColor(255, 255, 255, 255)
 				love.graphics.draw(tiles[Map.tiles[x+(y-1)*Map.width]],(x-1)*32,(y-1)*32,0,2)
 			end
 		end
@@ -93,6 +98,10 @@ function love.mousepressed(key,x,y) --回调函数释放鼠标按钮时触发。
 
 end
 
-function blockanalysis()
-	
+function blockanalysis(m)
+	for k,v in pairs(m) do
+		if v == 286 then
+			table.insert(Map.specialBlocks,unknown(k%Map.width+1,math.ceil()))
+		end
+	end
 end
