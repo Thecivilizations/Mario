@@ -92,3 +92,7 @@ function love.mousepressed(key,x,y) --回调函数释放鼠标按钮时触发。
 
 
 end
+
+function blockanalysis()
+	
+end
