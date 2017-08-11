@@ -6,6 +6,8 @@ io.stdout:setvbuf("no") --控制台输出窗口,优先输出如果没有则在�
 	
 --]]
 
+class = require "middleclass"
+
 function analysis(m,r)
 	local tab = m
 	local result = r or {}
