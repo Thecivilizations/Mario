@@ -30,6 +30,14 @@ function analysis(m,r)
 	return result
 end
 
+function blockanalysis(m)
+	for k,v in pairs(m.tiles) do
+		if v == 286 then
+			table.insert(m.specialBlocks,unknown(k%m.width+1,math.ceil(k/m.width)))
+		end
+	end
+end
+
 
 local Map = {}
 local content = love.filesystem.read("Maps/Map.lua")
@@ -38,6 +46,7 @@ Map.specialBlocks = {}
 local include = analysis(Map.background)
 include = analysis(Map.tiles,include)
 include = analysis(Map.hiddenTiles,include)
+blockanalysis(Map)
 
 function love.load() --资源加载回调函数，仅初始化时调用一次
 	tiles = {}
@@ -72,6 +81,9 @@ function love.draw() --绘图回调函数，每周期调用
 			end
 		end
 	end
+	for k,v in pairs(Map.specialBlocks) do
+		v:draw()
+	end
 
 
     
@@ -96,12 +108,4 @@ function love.mousepressed(key,x,y) --回调函数释放鼠标按钮时触发。
 
 
 
-end
-
-function blockanalysis(m)
-	for k,v in pairs(m) do
-		if v == 286 then
-			table.insert(Map.specialBlocks,unknown(k%Map.width+1,math.ceil()))
-		end
-	end
 end

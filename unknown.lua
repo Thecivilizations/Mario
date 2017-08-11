@@ -3,6 +3,7 @@ unknown = class("unknown")
 function unknown:init(x,y)
 	self.images = {286,287,288,289}
 	self.x,self.y = x,y
+	self:setup()
 end
 
 function unknown:setup()
@@ -12,5 +13,5 @@ function unknown:setup()
 end
 
 function unknown:draw()
-	love.graphics.draw(self.images[math.floor(os.clock()*12)%4+1,self.x,self.y)
+	love.graphics.draw(self.images[math.floor(os.clock()*8)%4+1],(self.x-1)*30,(self.y-1)*30,0,2)
 end
