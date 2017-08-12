@@ -13,5 +13,5 @@ function unknown:setup()
 end
 
 function unknown:draw()
-	love.graphics.draw(self.images[math.floor(os.clock()*8)%4+1],(self.x-1)*30,(self.y-1)*30,0,2)
+	love.graphics.draw(self.images[math.floor(os.clock()*8)%4+1],(self.x-1)*32,(self.y-1)*32,0,2)
 end

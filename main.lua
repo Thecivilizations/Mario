@@ -8,6 +8,7 @@ io.stdout:setvbuf("no") --控制台输出窗口,优先输出如果没有则在�
 
 class = require "middleclass"
 require "unknown"
+require "brick"
 
 function analysis(m,r)
 	local tab = m
@@ -33,7 +34,9 @@ end
 function blockanalysis(m)
 	for k,v in pairs(m.tiles) do
 		if v == 286 then
-			table.insert(m.specialBlocks,unknown(k%m.width+1,math.ceil(k/m.width)))
+			table.insert(m.specialBlocks,unknown(k%m.width,math.ceil(k/m.width)))
+		elseif v==451 then
+			table.insert(m.specialBlocks,brick(k%m.width,math.ceil(k/m.width),v))
 		end
 	end
 end
@@ -46,7 +49,6 @@ Map.specialBlocks = {}
 local include = analysis(Map.background)
 include = analysis(Map.tiles,include)
 include = analysis(Map.hiddenTiles,include)
-blockanalysis(Map)
 
 function love.load() --资源加载回调函数，仅初始化时调用一次
 	tiles = {}
@@ -54,6 +56,7 @@ function love.load() --资源加载回调函数，仅初始化时调用一次
 	for k,v in pairs(include) do
 		tiles[v] = love.graphics.newImage("Asserts/Tiles/tile-"..v..".png")
 	end
+	blockanalysis(Map)
 end
 
 
