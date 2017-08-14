@@ -4,6 +4,9 @@ function player:init(x,y)
 	self.images = {}
 	self.dir = 1
 	self.isJumping = false
+	self.y = 0
+	self.xBak=0
+	self.yBak=0
 end
 
 function player:setup()
@@ -13,44 +16,63 @@ function player:setup()
 	for i=1,3 do
 		table.insert(self.images,love.graphics.newImage("Asserts/Mario/little-"..i..".png"))
 	end
+	self.jump = love.graphics.newImage("Asserts/Mario/little-4.png")
 	table.insert(self.images,self.images[2])
 end
 
 function player:draw()
 	love.graphics.setColor(0, 0, 0, 100)
-	love.graphics.draw(self.images[math.floor(os.clock()*8)%4+1], self.body:getX()-self.dir*16+26,self.body:getY()+10,0,2*self.dir,2)
+	if not self.isJumping then
+		love.graphics.draw(self.images[math.floor(os.clock()*8)%4+1], self.body:getX()-self.dir*16+26,self.body:getY()+10,0,2*self.dir,2)
+	else
+		love.graphics.draw(self.jump, self.body:getX()-self.dir*16+26,self.body:getY()+10,0,2*self.dir,2)
+	end
 	love.graphics.setColor(255, 255, 255, 255)
-	love.graphics.draw(self.images[math.floor(os.clock()*8)%4+1], self.body:getX()-self.dir*16+16,self.body:getY(),0,2*self.dir,2)
+	love.graphics.print(self.xBak.." "..math.floor(self.yBak), 0,0)
+	if not self.isJumping then
+		love.graphics.draw(self.images[math.floor(os.clock()*8)%4+1], self.body:getX()-self.dir*16+16,self.body:getY(),0,2*self.dir,2)
+	else
+		love.graphics.draw(self.jump, self.body:getX()-self.dir*16+16,self.body:getY(),0,2*self.dir,2)
+	end
 end
 
 function player:update(dt)
-	local x,y = self.body:getLinearVelocity()
+	self.xBak,self.yBak = self.body:getLinearVelocity()
+	if self.yBak==0 and self.y==0 then
+		self.isJumping = false
+	elseif math.floor(self.yBak)~=0 and math.ceil(self.yBak)~=0 then
+		self.isJumping = true
+	end
 	if love.keyboard.isDown("a") then
-		self.dir = -1
 		if not self.isJumping then
-			self.body:setLinearVelocity(-200,0)
+			if self.xBak>-250 then
+				self.body:setLinearVelocity(self.xBak-2,self.yBak)
+			end
+			self.dir = -1
 		else
-			self.body:applyForce(-600,0)
+			if self.xBak>-250 then
+				self.body:applyForce(-500,0)
+			end
 		end
 	elseif love.keyboard.isDown("d") then
-		self.dir = 1
 		if not self.isJumping then
-			self.body:setLinearVelocity(200,0)
+			if self.xBak<250 then
+				self.body:setLinearVelocity(self.xBak+2,self.yBak)
+			end
+			self.dir = 1
 		else
-			self.body:applyForce(600,0)
+			if self.xBak<250 then
+				self.body:applyForce(500,0)
+			end
 		end
 	end
-	if y==0 then
-		self.isJumping = false
-	else
-		self.isJumping = true
-	end
+	self.y = self.yBak
 end
 
-function player:keypressed(key)
-	if key=="k" then
-		local x,y = self.body:getLinearVelocity()
-		self.body:setLinearVelocity(x,-500)
+function player:keypressed(key,m)
+	if key=="k" and not self.isJumping then
+		self.body:setLinearVelocity(self.xBak,-500)
 		self.isJumping = true
+
 	end
 end

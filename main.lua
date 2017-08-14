@@ -119,7 +119,7 @@ end
 
 
 function love.keypressed(key) --键盘检测回调函数，当键盘事件触发是调用
-	mario:keypressed(key)
+	mario:keypressed(key,Map)
 
 
 
