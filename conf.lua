@@ -13,7 +13,7 @@ function love.conf(t)
  
     t.window.title = "（伪）Mario Maker"        -- 程序窗口标题 (string)
     t.window.icon = nil                -- 使用一张游戏目录中的图片作为窗口图标 (string)
-    t.window.width = 1200               -- 程序窗口宽 (number)
+    t.window.width = 640               -- 程序窗口宽 (number)
     t.window.height = 480              -- 程序窗口高 (number)
 
     t.window.borderless = false        -- 移除所有程序边框的视觉效果 (boolean)
